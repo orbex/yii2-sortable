@@ -113,9 +113,11 @@ class Sortable extends \kartik\base\Widget
      */
     protected function hasDisabledItem()
     {
-        foreach ($this->items as $item) {
-            if (ArrayHelper::getValue($item, 'disabled', false)) {
-                return true;
+        if(0 < count($this->items)) {
+            foreach ($this->items as $item) {
+                if (ArrayHelper::getValue($item, 'disabled', false)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -130,14 +132,16 @@ class Sortable extends \kartik\base\Widget
     {
         $items = '';
         $handle = ($this->showHandle) ? Html::tag('span', $this->handleLabel, ['class' => 'handle']) : '';
-        foreach ($this->items as $item) {
-            $options = ArrayHelper::getValue($item, 'options', []);
-            $options = ArrayHelper::merge($this->itemOptions, $options);
-            if (ArrayHelper::getValue($item, 'disabled', false)) {
-                Html::addCssClass($options, 'disabled');
+        if(0 < count($this->items)) {
+            foreach ($this->items as $item) {
+                $options = ArrayHelper::getValue($item, 'options', []);
+                $options = ArrayHelper::merge($this->itemOptions, $options);
+                if (ArrayHelper::getValue($item, 'disabled', false)) {
+                    Html::addCssClass($options, 'disabled');
+                }
+                $content = $handle . ArrayHelper::getValue($item, 'content', '');
+                $items .= Html::tag('li', $content, $options) . PHP_EOL;
             }
-            $content = $handle . ArrayHelper::getValue($item, 'content', '');
-            $items .= Html::tag('li', $content, $options) . PHP_EOL;
         }
         return $items;
     }
